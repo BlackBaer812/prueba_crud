@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="css/custom.css">
     <link rel="stylesheet" href="css/bootstrap-5.3.8-dist/css/bootstrap.min.css">
 </head>
-<body>
+<body class="container-fluid p-0">
     <?php include 'partials/header.php'; ?>
-    <main class="container-fluid">
+    <main class="container-fluid d-flex flex-column">
         
         <div class="row">
-            <div class="col-2">
+            <div class="col-2 navegacion-lateral">
                 <!-- Seccion menu lateral -->
             </div>
-            <div class="col-10">
+            <div class="col-10  pt-3">
                 <!-- Sección del formulario -->
 
                 <section>
@@ -97,6 +97,14 @@
         </div>
         
     </main>
+
+    <footer class = "container-fluid">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center align-items-center py-3">
+                <span>CRUD Prueba - Marcos Ruiz Clemente</span>
+            </div>
+        </div>
+    </footer>
 
     <script type="module" src="js/custom.js"></script>
 </body>

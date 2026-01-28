@@ -9,6 +9,11 @@ window.addEventListener("DOMContentLoaded", () =>{
         agregarTarea();
     });
 
+    const filasPendientes = document.getElementsByClassName("filaPendiente");
+    Array.from(filasPendientes).forEach((fila) => {
+        const tarea_id = fila.getAttribute("att_id");
+        agregarEventosBotones(tarea_id);
+    });
 })
 
 async function agregarTarea(){
@@ -25,20 +30,17 @@ async function agregarTarea(){
 
     const url = "php/controlers/tareas/addTarea.php";
 
-    const mensajeHtml = document.getElementById("mensajeForm")
-
-    const respuesta = await envioDDBBPruebas(formData, url);
-    console.log(respuesta)
+    const respuesta = await envioDDBB(formData, url);
     if(respuesta.success){
+        escribirMensaje(respuesta);
 
+        form.reset();
+
+        const tabla = document.getElementById("tablaTareasPendientes").getElementsByTagName('tbody')[0];
+        crearFilaNueva(tabla, respuesta.datos);
     }
     else{
-        mensajeHtml.innerText = respuesta.mensaje;
-        mensajeHtml.classList.add("text-danger");
-        borrar = setTimeout(() => {
-            mensajeHtml.innerText = "";
-            mensajeHtml.classList.remove("text-danger");
-        }, 6000);
+        escribirMensaje(respuesta);
     }
 }
 
@@ -73,4 +75,87 @@ async function envioDDBBPruebas(formData, url){
     .catch(error => {
         console.error("Error:", error);
     });
+}
+
+
+function crearFilaNueva(tabla, datos){    
+    const categorias = categoriasFilaNueva(datos.categorias);
+
+    const html = `
+    <tr id="fila${datos.id}" att_id="${datos.id}">
+        <td class="text-center">${datos.nombre}</td>
+        <td class="text-center">${categorias}</td>
+        <td class="text-center">
+            <button class="btn btn-sm btn-danger" id = "eliminar${datos.id}" att_id="${datos.id}">Eliminar</button>
+            <button class="btn btn-sm btn-success" id = "completar${datos.id}" att_id="${datos.id}">Completar</button>
+        </td>
+    </tr>
+    `;
+    tabla.innerHTML += html;
+
+    agregarEventosBotones(datos.id);
+}
+
+function categoriasFilaNueva(categorias){
+    let html = "";
+    categorias.forEach(categoria => {
+        html += `<span class="badge bg-primary me-1">${categoria.nombre}</span>`;
+    });
+    return html;
+}
+
+
+function agregarEventosBotones(tarea_id){
+    const botonEliminar = document.getElementById(`eliminar${tarea_id}`);
+
+    const botonCompletar = document.getElementById(`completar${tarea_id}`);
+
+    botonEliminar.addEventListener("click", async () => {
+        eliminarTarea(parseInt(botonEliminar.getAttribute("att_id")))
+    });
+
+    botonCompletar.addEventListener("click", async () => {
+        completarTarea(parseInt(botonCompletar.getAttribute("att_id")))
+    });
+}
+
+
+async function eliminarTarea(tarea_id){
+    const datos = new FormData();
+    datos.append("tarea_id", tarea_id);
+
+    const url = "php/controlers/tareas/deleteTarea.php";
+
+    const respuesta = await envioDDBB(datos, url);
+    if(respuesta.success){
+        eliminarFila(tarea_id);
+        escribirMensaje(respuesta);
+    }
+    else{
+        escribirMensaje(respuesta);
+    }
+}
+
+async function completarTarea(tarea_id){
+
+}
+
+function eliminarFila(tarea_id){
+    console.log(tarea_id);
+    const fila = document.getElementById(`fila${tarea_id}`);
+    console.log(fila);
+    fila.remove();
+}
+
+function escribirMensaje(respuesta){
+    const mensajeHtml = document.getElementById("mensajeForm")
+
+    const clase = respuesta.success ? "text-success" : "text-danger";
+
+    mensajeHtml.innerText = respuesta.mensaje;
+    mensajeHtml.classList.add(clase);
+    borrar = setTimeout(() => {
+        mensajeHtml.innerText = "";
+        mensajeHtml.classList.remove(clase);
+    }, 6000);
 }

@@ -31,21 +31,41 @@ class tareasController{
                 
                 if(!isset($lastID["errorinfo"])){
                     $tarea_id = $lastID[0]["id"];
+                    $errores = [];
                     foreach($_POST["categorias"] as $categoria_id => $existe){
                         $responseCategoria = TareasCategoriasModel::addTareaCategoria($tarea_id, $categoria_id);
                         if(isset($responseCategoria["errorinfo"])){
-                            $mensaje = "Fallo al agregar la categoría a la tarea.";
                             $error = $responseCategoria["errorinfo"];
-                            return [
-                                "success" => $success,
-                                "mensaje" => $mensaje,
-                                "error" => $error,
-                                "datos" => $datos
-                            ];
+                            $errores[] = $error;
                         }
                     }
-                    $success = true;
-                    $mensaje = "Tarea agregada correctamente.";
+
+                    if(count($errores) == 0){
+                        $tareas = tareasModel::getTarea($tarea_id);
+                        if(!isset($tareas["errorinfo"])){
+                            foreach($tareas as $tarea){
+                                if(!isset($datos["id"])){
+                                    $datos["id"] = $tarea["id"];
+                                    $datos["nombre"] = $tarea["nombre"];
+                                    $datos["categorias"] = [];
+                                }
+                                $datos["categorias"][] = [
+                                    "id" => $tarea["categoria_id"],
+                                    "nombre" => $tarea["categoria_nombre"]
+                                ];
+                            }
+                            $mensaje = "Tarea agregada correctamente.";
+                            $success = true;
+                        }
+                        else{
+                            $mensaje = "Tarea agregada, pero hubo errores al obtener los datos.";
+                            $error = $tareas["errorinfo"];
+                        }
+                    }
+                    else{
+                        $mensaje = "Tarea agregada, pero hubo errores al asignar categorias.";
+                        $error = $errores;   
+                    }
                 }
                 else{
                     $mensaje = "Fallo al obtener el ID de la tarea.";
@@ -63,21 +83,35 @@ class tareasController{
             $error = "";
         }
 
-        // if(isset($_POST['nombre']) && !empty($_POST['nombre'])){
-        //     $nombre = htmlspecialchars($_POST['nombre']);
+        return [
+            "success" => $success,
+            "mensaje" => $mensaje,
+            "error" => $error,
+            "datos" => $datos
+        ];
+    }
 
-        //     $sql = "INSERT INTO tarea (nombre, finalizada) VALUES ('$nombre', 0)";
-        //     $result = tareasModel::databaseAction($sql);
+    public static function deleteTareaVuelta(){
+        return self::deleteTareaHandeler();
+    }
 
-        //     if($result){
-        //         $success = true;
-        //         $mensaje = "Tarea agregada correctamente.";
-        //     } else {
-        //         $error = "Error al agregar la tarea.";
-        //     }
-        // } else {
-        //     $error = "El nombre de la tarea es obligatorio.";
-        // }
+    private static function deleteTareaHandeler(){
+        $success = false;
+        $mensaje = "";
+        $error = "";
+        $datos = [];
+
+        $eliminado = tareasModel::deleteTarea($_POST["tarea_id"]);
+
+        if(!isset($eliminado["errorinfo"])){
+            $mensaje = "Tarea eliminada correctamente.";
+            $success = true;
+            $datos = ["id" => $_POST["tarea_id"]];
+        }
+        else{
+            $mensaje = "Fallo al eliminar la tarea.";
+            $error = $eliminado["errorinfo"];
+        }
 
         return [
             "success" => $success,
