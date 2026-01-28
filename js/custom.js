@@ -137,7 +137,11 @@ async function eliminarTarea(tarea_id){
 }
 
 async function completarTarea(tarea_id){
+    //TODO completar tarea
 
+    //TODO eliminar fila de pendientes
+
+    //TODO agregar fila a completadas
 }
 
 function eliminarFila(tarea_id){
