@@ -13,6 +13,10 @@ main{
 
 }
 
+tr:hover td{
+    background-color: #d3eaffb6 !important;
+}
+
 .navegacion-lateral{
     min-height: calc(100vh - 152px);
 }
