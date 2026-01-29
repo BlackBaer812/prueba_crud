@@ -2,11 +2,12 @@
 
 require_once "php/controlers/tareas/tareas.php";
 
-$tareas = tareasController::getTareasTodasPendientesCarga();
+$tareasPen = tareasController::getTareasTodasPendientesCarga();
+$tareasCom = tareasController::getTareasTodasCompletadasCarga();
 
 $tareasPendientes = [];
 
-foreach($tareas as $tarea){
+foreach($tareasPen as $tarea){
     if(!isset($tareasPendientes[$tarea["id"]])){
         $tareasPendientes[$tarea["id"]] = [
             "id" => $tarea["id"],
@@ -20,5 +21,19 @@ foreach($tareas as $tarea){
     ];
 }
 
+$tareasCompletadas = [];
+foreach($tareasCom as $tarea){
+    if(!isset($tareasCompletadas[$tarea["id"]])){
+        $tareasCompletadas[$tarea["id"]] = [
+            "id" => $tarea["id"],
+            "nombre" => $tarea["nombre"],
+            "categorias" => []
+        ];
+    }
+    $tareasCompletadas[$tarea["id"]]["categorias"][] = [
+        "categoria_id" => $tarea["categoria_id"],
+        "categoria_nombre" => $tarea["categoria_nombre"]
+    ];
+}
 
 ?>

@@ -62,6 +62,12 @@ class tareasModel extends commonFunctions{
         $datos = [$id];
         return self::database($sql, $datos);
     }
+
+    public static function completeTarea($id){
+        $sql = "UPDATE tarea SET finalizada = 1 WHERE id = ?";
+        $datos = [$id];
+        return self::database($sql, $datos);
+    }
 }
 
 ?>

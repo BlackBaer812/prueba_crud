@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="css/custom.css">
     <link rel="stylesheet" href="css/bootstrap-5.3.8-dist/css/bootstrap.min.css">
 </head>
+
+<?php
+
+    require_once "php/controlers/tareas/getTareas.php";
+
+?>
 <body class="container-fluid p-0">
     <?php include 'partials/header.php'; ?>
     <main class="container-fluid d-flex flex-column">
@@ -62,14 +68,14 @@
                 <section>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center mb-4 gap-3">
-                            <button class="btn btn-primary">Tareas pendientes</button>
-                            <button class="btn btn-primary">Tareas completadas</button>
+                            <button class="btn btn-primary" id="btnTareasPendientes" att_id="seccionPendientes">Tareas pendientes</button>
+                            <button class="btn btn-primary" id="btnTareasCompletadas" att_id="seccionCompletadas">Tareas completadas</button>
                         </div>
                     </div>
                 </section>
 
                 <!-- Sección del listado de tareas pendientes -->
-                <section>
+                <section id="seccionPendientes">
                     <div class="row">
                         <div class="col-12">
                             <div class="container">
@@ -82,7 +88,7 @@
                 </section>
 
                 <!-- Sección del listado de tareas completadas -->
-                <section class="d-none">
+                <section id="seccionCompletadas" class="d-none">
                     <div class="row">
                         <div class="col-12">
                             <div class="container">

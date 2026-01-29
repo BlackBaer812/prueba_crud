@@ -7,12 +7,33 @@ header, footer, .navegacion-lateral{
 }
 
 main{
-    min-height: calc(100vh - 140px);
+    min-height: calc(100vh - 152px);
     display: flex;
     flex-direction: column;
 
 }
 
 .navegacion-lateral{
-    min-height: calc(100vh - 140px);
+    min-height: calc(100vh - 152px);
+}
+
+.PHP, .Javascript, .CSS{
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.PHP{
+    background-color: #8892BF;
+    color: #232733;
+}
+
+.Javascript{
+    background-color: #F7DF1E;
+    color: #000;
+}
+
+.CSS{
+    background-color: #1572B6;
+    color: #FFF;
 }

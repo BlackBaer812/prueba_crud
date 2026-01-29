@@ -8,14 +8,13 @@
     </thead>
     <tbody>
         <?php 
-        require_once "php/controlers/tareas/getTareas.php";
         foreach ($tareasPendientes as $tarea) : ?>
             <tr id="fila<?php echo $tarea['id']; ?>" class="filaPendiente" att_id="<?php echo $tarea['id']; ?>">
                 <td class="text-center"><?php echo htmlspecialchars($tarea['nombre']); ?></td>
                 <td class="text-center">
                     <?php 
                         foreach($tarea['categorias'] as $categoria){
-                            echo '<span class="badge bg-primary me-1">' . htmlspecialchars($categoria['categoria_nombre']) . '</span>';
+                            echo '<span class="badge me-1 ' . htmlspecialchars($categoria['categoria_nombre']) . '">' . htmlspecialchars($categoria['categoria_nombre']) . '</span>';
                         }
                     ?>
                 </td>
